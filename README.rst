@@ -15,5 +15,5 @@ Zoo Game
 
 
 Bonus task
-
+----------
 2.  Each cage needs a reference number so the zoo keeper doesn't get confused.  Automatically generate a reference number when building each cage.  The first cage should be 1, the second 2, etc.
