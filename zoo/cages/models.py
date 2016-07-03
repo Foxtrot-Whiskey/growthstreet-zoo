@@ -40,3 +40,4 @@ class ZooAnimal(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     animal_type = models.CharField(max_length=30)
     animal_name = models.CharField(max_length=30)
+    animal_cage = models.ForeignKey('ZooCage')
