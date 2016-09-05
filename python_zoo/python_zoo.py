@@ -5,6 +5,7 @@ class Zoo():
     """Creates a Zoo object with a name and an empty list for cages."""
 
     kind = 'Zoo'
+    zoo_cages = 1
 
     def __init__(self, name):
         """Zoo is created with a name."""
@@ -13,7 +14,8 @@ class Zoo():
 
     def add_cage(self, cage):
         """Cage objects are added to a Zoo's cages list."""
-        self.cages.append(ZooCage(cage))
+        self.cages.append(ZooCage(self.zoo_cages, cage))
+        self.zoo_cages += 1
 
     def cage(self, cage):
         """Return cage object from a given cage name."""
@@ -64,8 +66,9 @@ class ZooCage():
 
     kind = 'Cage'
 
-    def __init__(self, cage_name):
+    def __init__(self, cage_id, cage_name):
         """Cage is created with a name and an empty list for contents."""
+        self.id = cage_id
         self.name = cage_name
         self.cage_contents = []
 
