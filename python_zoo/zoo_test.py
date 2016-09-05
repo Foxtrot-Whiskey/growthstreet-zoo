@@ -13,5 +13,6 @@ monkeys.add_animal("Harambe", "Gorilla")
 lions.add_animal("Growlr", "Lion")
 
 z.dinner_time("Harambe", "George")
+z.dinner_time("Growlr", "George")
 z.move_animal("The Lion Den", "The Monkey Cage", "Growlr")
 z.dinner_time("Growlr", "George")
