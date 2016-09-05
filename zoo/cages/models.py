@@ -39,6 +39,10 @@ class ZooCage(models.Model):
     def __str__(self):
         return self.cage_name
 
+    def __init__(self, *args, **kwargs):
+        self.found = True
+        super().__init__(*args, **kwargs)
+
     def add_animal(self, animals):
         self.cage_contents.append(animals)
 
@@ -53,6 +57,7 @@ class ZooAnimal(models.Model):
     animal_type = models.CharField(max_length=30)
     animal_name = models.CharField(max_length=30)
     animal_cage = models.ForeignKey(ZooCage, on_delete=models.CASCADE)
+    animal_alive = models.BooleanField(initial=True)
 
     def __str__(self):
         return (self.animal_type, '-', self.animal_name)
