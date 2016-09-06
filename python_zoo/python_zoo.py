@@ -1,7 +1,7 @@
 """You are a zoo keeper. Write a set of objects that simulates a simple zoo."""
 
 
-class Zoo():
+class Zoo:
     """Creates a Zoo object with a name and an empty list for cages."""
 
     kind = 'Zoo'
@@ -61,7 +61,7 @@ class Zoo():
             print("{} is in another cage :(".format(dinner.name))
 
 
-class ZooCage():
+class ZooCage:
     """Creates a ZooCage object with a cage_name."""
 
     kind = 'Cage'
@@ -77,7 +77,7 @@ class ZooCage():
         self.cage_contents.append(ZooAnimal(name, species, self.name))
 
 
-class ZooAnimal():
+class ZooAnimal:
     """Creates a ZooAnimal object."""
 
     kind = 'Animal'
@@ -89,3 +89,11 @@ class ZooAnimal():
         self.cage = cage
         self.status = 'Alive'
         self.sit_rep = None
+
+    def __str__(self):
+        """xxx."""
+        return self.name
+
+    def __repr__(self):
+        """xxx."""
+        return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
