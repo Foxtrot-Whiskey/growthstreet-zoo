@@ -6,7 +6,7 @@ Tom's Zoo
 
 Hi Both,
 
-This is my first submission for review - have a look. The easiest way to see what it can do is probably run the zoo_test.py file. It makes a simple zoo and populates it with two cages and some animals. First it tries to get the monkey Harambe to eat the monkey George. Monkeys don't eat monkeys so this fails with the message "I can't eat a Bonobo". Then it prompts the Lion Growlr to eat the monkey George. Animals cannot eat animals in other cages. So this also fails with the message "George is in another cage :(". Then the Lion "Growlr" is moved from the Lion Cage to the Monkey Cage and the action is repeated. This results in Georges status changing from "Alive" to "Dead" and his sit_rep showing who ate him.
+This is my second submission for review - have a look. The easiest way to see what it can do is probably run the zoo_test.py file. It makes a simple zoo and populates it with two cages and some animals. First it tries to get the monkey Harambe to eat the monkey George. Monkeys don't eat monkeys so this fails with the message "I can't eat a Bonobo". Then it prompts the Lion Growlr to eat the monkey George. Animals cannot eat animals in other cages. So this also fails with the message "George is in another cage :(". Then the Lion "Growlr" is moved from the Lion Cage to the Monkey Cage and the action is repeated. This results in Georges status changing from "Alive" to "Dead" and his sit_rep showing who ate him.
 
 Zoo Game
 --------
