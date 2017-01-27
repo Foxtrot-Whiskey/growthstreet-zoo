@@ -1,12 +1,9 @@
 """You are a zoo keeper. Write a set of objects that simulates a simple zoo."""
 
-DICTIONARY_OF_PREDATION = {'MONKEY': ['LION', 'CROCODILE', 'PYTHON'],
-                           'LION': ['CROCODILE'],
-                           'CROCODILE': [],
-                           'PYTHON': ['CROCODILE']}
 
 class Zoo:
-    """Creates a Zoo object with a name and an empty list for cages."""
+    """Creates a Zoo object with a name and an empty list for cages."""\
+
     zoo_cages = 1
 
     def __init__(self, name):
@@ -20,8 +17,8 @@ class Zoo:
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        animals = [[animal for animal in cage if animal.status == 'Alive'] for cage in self.cages]
-        return '<%s: %s Cages (%s Animals)>' % (self, len(self.cages), len(animals))
+        animals = [[animal for animal in cage.cage_contents if animal.status == 'Alive'] for cage in self.cages]
+        return '<%s: %s Cages (%s Animals)>' % (self.name, len(self.cages), len(animals))
 
     def add_cage(self, cage):
         """Cage objects are added to a Zoo's cages list."""
@@ -51,12 +48,14 @@ class Zoo:
         move_from.cage_contents.remove(moved_animal)
 
         moved_animal.cage = cage_to
-        
+
         for animal in move_to.cage_contents:
-            dinner_time(animal_name, animal.name)
-        
+            self.dinner_time(animal_name, animal.name)
+
         for animal in move_to.cage_contents:
-            dinner_time(animal.name, animal_name)
+            self.dinner_time(animal.name, animal_name)
+
+        cage_to.cage_relationships()
 
         print("{} has been moved from {} to {}".format(
             moved_animal.name, cage_from, cage_to))
@@ -68,11 +67,14 @@ class Zoo:
 
         print('I will eat: {}'.format(dinner.name))
         if eater.cage == dinner.cage:
-            if dinner.species in DICTIONARY_OF_PREDATION[eater.species]:
-                dinner.status = 'Dead'
-                dinner.sit_rep = 'I was eaten by a {} called {}'.format(
-                    eater.species, eater.name)
-                print(dinner.sit_rep)
+            if dinner.animal_type == 'Prey':
+                if eater.animal_type in ['Predator', 'Apex Predator']:
+                    dinner.status = 'Dead'
+                    dinner.sit_rep = 'I was eaten by a {} called {}'.format(
+                        eater.species, eater.name)
+                    print(dinner.sit_rep)
+                else:
+                    print("A {} cannot eat a {}").format(eater.species, dinner.species)
             else:
                 print("A {} cannot eat a {}").format(eater.species, dinner.species)
         else:
@@ -94,15 +96,63 @@ class Cage:
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.cage_contents)
+        return '<%s: %s (%s)>' % (self.__class__.__name__, self.name, self.cage_contents)
 
-    def add_animal(self, name, species):
+    def is_apex(self, predators_list):
+        """A bool identifying the presence of an apex predator."""
+        apex = list()
+        for predator in predators_list:
+            if predator.animal_type == 'Apex Predator':
+                apex.append(predator)
+        if apex:
+            return True
+        else:
+            return False
+
+    def cage_relationships(self):
+        """If you put prey and predator in the same cage, then all the prey should be eaten by the predator."""
+        apex_predators = [animal for animal in self.cage_contents if animal.is_apex()]
+        predators = [animal for animal in self.cage_contents if animal.animal_type in ['Predator', 'Apex Predator']]
+        prey = [animal for animal in self.cage_contents if animal.animal_type == 'Prey']
+
+        relationship_over = 0
+
+        if len(predators):
+            for animal in prey:
+                animal.status = 'Dead'
+                animal.sit_rep = 'Eaten by {} predators'.format(len(predators))
+                relationship_over += 1
+
+        if len(apex_predators):
+            for animal in predators:
+                if animal not in apex_predators:
+                    animal.status = 'Dead'
+                    animal.sit_rep = 'Eaten by {}'.format([apex_predator.name for apex_predator in apex_predators])
+                    relationship_over += 1
+
+        return '{} animals eaten.'.format(relationship_over)
+
+    def add_apex_predator(self, name, species):
         """Animal objects can be added to a ZooCage's cage_contents list."""
-        self.cage_contents.append(Animal(name, species, self.name))
+        self.cage_contents.append(SuperPredator(name, species, self.name))
+        self.cage_relationships()
+
+    def add_predator(self, name, species):
+        """Animal objects can be added to a ZooCage's cage_contents list."""
+        self.cage_contents.append(Predator(name, species, self.name))
+        self.cage_relationships()
+
+    def add_prey(self, name, species):
+        """Animal objects can be added to a ZooCage's cage_contents list."""
+        self.cage_contents.append(Prey(name, species, self.name))
+        self.cage_relationships()
 
 
-class Animal:
-    """Creates a ZooAnimal object."""
+class BaseAnimal:
+    """
+    Base Class for animals in the zoo.
+    Designed to be subclassed with an unimplemented method to actually create the animal.
+    """
 
     def __init__(self, name, species, cage):
         """Zoo animals have names, species, cages and are created 'Alive'."""
@@ -119,3 +169,29 @@ class Animal:
     def __repr__(self):
         """Class representation, returned when class object is called."""
         return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
+
+    def is_apex(self):
+        """A bool indicating whether the animal is an apex predator."""
+        return False
+
+
+class Predator(BaseAnimal):
+    """Create a Predatory animal."""
+
+    animal_type = 'Predator'
+
+
+class Prey(BaseAnimal):
+    """Create a non-predatory animal."""
+
+    animal_type = 'Prey'
+
+
+class SuperPredator(BaseAnimal):
+    """Create an Apex Predator."""
+
+    animal_type = 'Apex Predator'
+
+    def is_apex(self):
+        """Overridden base class for Apex Predators."""
+        return True
