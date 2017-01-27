@@ -27,13 +27,15 @@ Bonus task
 David's Ideas:
 ---------------
 
-  DONE - add .pyc files to .gitignore 
-  - documentation file. i.e. how to find the number of cages in the zoo.
+  - DONE - add .pyc files to .gitignore 
+  - DONE - Make class names shorter. See smurf case
+  - DONE - remove "kind" from classes
+  - DONE - add __str__ and __repr__ method to all classes
+  - DONE  - Make 'super' BaseAnimal class. Extend other animals from it.
   - If you put prey and predator in the same cage, then all the prey should be eaten by the predator.
-  DONE - Make class names shorter. See smurf case
-  DONE - remove "kind" from classes
-  DONE - add __str__ and __repr__ method to all classes
-  - Make 'super' BaseAnimal class. Extend other animals from it.
+  - documentation file. i.e. how to find the number of cages in the zoo.
+
+
   
 
 george = Prey("George", "Bonobo")

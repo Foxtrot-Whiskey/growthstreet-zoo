@@ -1,6 +1,7 @@
+Set up of a simple zoo with two cages for testing.
+
 from python_zoo.python_zoo import Zoo, ZooCage, ZooAnimal
 
-"""Set up of la simple zoo with two cages for testing."""
 z = Zoo("Tom's Test Zoo")
 z.add_cage("The Lion Den")
 z.add_cage("The Monkey Cage")
