@@ -1,21 +1,20 @@
 """You are a zoo keeper. Write a set of objects that simulates a simple zoo."""
 
-ANIMAL_STATUS = (
-    ('AL', 'Alive'),
-    ('DE', 'Dead'),
-)
+ANIMAL_STATUS = {
+    'AL': 'Alive',
+    'DE': 'Dead',
+}
 
-ANIMAL_TYPES = (
-    ('CA', 'Carnivore'),
-    ('OM', 'Omnivore'),
-    ('HE', 'Herbivore'),
-)
+ANIMAL_TYPES = {
+    'CA': 'Carnivore',
+    'OM': 'Omnivore',
+    'HE': 'Herbivore',
+}
 
-MEAT_QUALITY = (
-    ('TE', 'Tender'),
-    ('TO', 'Tough')
-)
-
+MEAT_QUALITY = {
+    'TE': 'Tender',
+    'TO': 'Tough',
+}
 
 class Zoo(object):
     """Creates a Zoo object with a name and an empty list for cages."""
@@ -33,13 +32,16 @@ class Zoo(object):
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        animals = [[animal for animal in cage.cage_contents if animal.status == 'Alive'] for cage in self.cages]
+        animals = [[animal for animal in cage.cage_contents if animal.status == 'AL'] for cage in self.cages]
         return '<%s: %s Cages (%s Animals)>' % (self.name, len(self.cages), len(animals))
 
     def add_cage(self, cage_name):
         """Cage objects are added to a Zoo's cages list."""
-        self.cages.append(Cage(cage_name))
+        cage = Cage(cage_name)
+        self.cages.append(cage)
         self.zoo_cages += 1
+        return cage
+        
 
     def remove_cage(self, cage_name):
         """The Zoo should keep track of how many cages are in existence."""
@@ -99,11 +101,11 @@ class Cage(object):
         self.cage_contents = []
         if zoo:
             self.zoo = zoo
-        Cage.instances_created += 1
+        Cage.instances += 1
 
     def __del__(self):
         """Cage can be deleted while keeping track of the total."""
-        Cage.instances_created -= 1
+        Cage.instances -= 1
 
     def __str__(self):
         """Human readable string returned when the class object is printed."""
@@ -113,19 +115,33 @@ class Cage(object):
         """Class representation, returned when class object is called."""
         return '<%s: %s (%s)>' % (self.__class__.__name__, self.name, self.cage_contents)
 
+    def add_animal(self, animal):
+        animal.get_competition_score()
+        animal.cage = self
+        self.cage_contents.append(animal)
+        relationship = self.cage_relationships()
+        if relationship:
+            return relationship
+        else:
+            return self
+
     def cage_relationships(self):
         """If you put prey and predator in the same cage, then all the prey should be eaten by the predator."""
-        competition_scores = [animal.get_competition_score() for animal in self.cage_contents]
-        predators = [animal for animal in self.cage_contents if animal.competition_score == min(competition_scores)]
-        eaten_animals = 0
+        if len(self.cage_contents) > 1:
+            COMPETITIVENESS = 2  # The higher the competitiveness the harder it is to eat animals. Animals try harder to avoid being eaten.
+            competition_scores = [animal.competition_score for animal in self.cage_contents]
+            predators = [animal for animal in self.cage_contents if animal.competition_score == min(competition_scores)]
+            eaten_animals = 0
 
-        for animal in self.cage_contents:
-            if animal.competition_score > min(competition_scores) * 2:
-                animal.status = animal.STATUS_DEAD
-                animal.sit_rep = "I was eaten by {}".format(predators)
-                eaten_animals += 1
-
-        return "{} animals eaten".format(eaten_animals)
+            for animal in self.cage_contents:
+                if animal.competition_score > min(competition_scores) * COMPETITIVENESS:  # There must be a difference in competitiveness of a certain amount calculated with a CONSTANT
+                    animal.status = animal.STATUS_DEAD
+                    animal.sit_rep = "I was eaten by {}".format(predators)
+                    eaten_animals += 1
+            if eaten_animals:
+                return "{} animals eaten".format(eaten_animals)
+            else:
+                return None
 
 
 class BaseSpecies(object):
@@ -153,6 +169,7 @@ class BaseSpecies(object):
         self.animal_type = None
         self.sit_rep = None
         self.competition_score = None
+        self.meat_quality = None
         if cage:
             self.cage = cage
 
@@ -164,6 +181,18 @@ class BaseSpecies(object):
         """Class representation, returned when class object is called."""
         return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
 
+    def get_status(self):
+        """Return a human readable status code"""
+        return ANIMAL_STATUS[self.status]
+
+    def get_type(self):
+        """Return a human readable animal type"""
+        return ANIMAL_TYPE[self.animal_type]
+
+    def get_quality(self):
+        """Return a human readable animal type"""
+        return MEAT_QUALITY[self.meat_quality]
+
     def get_competition_score(self):
         """Identify the correct relationships for a given animal.
 
@@ -174,25 +203,24 @@ class BaseSpecies(object):
             LIONS are carnivores and eat only TENDER meat.
 
         Current scores:
-            LION = 2
+            LION = 1
             HYENA = 2
-            WILDEBEEST = 4
+            WILDEBEEST = 3
             GAZELLE = 6
 
         Lower scores indicate that animals are more likely to eat and less likely to be eaten.
         """
-        type_score = next(i for i, v in enumerate(ANIMAL_TYPES) if v[0] == self.animal_type)
-        quality_score = next(i for i, v in enumerate(ANIMAL_TYPES) if v[0] == self.animal_type)
+        type_score = next(i for i, v in enumerate(ANIMAL_TYPES) if v == self.animal_type)
+        quality_score = next(i for i, v in enumerate(ANIMAL_TYPES) if v == self.animal_type)
 
-        self.competition_score = type_score + 1 * quality_score + 1  # Should be positive in all cases
-        return self.competition_score
+        self.competition_score = (type_score + 1) * (quality_score + 1)  # Should be positive in all cases
     
     def get_weight_adjusted_competition_score(self):
         """Potential to add weight as a multiplier function.
 
            E.g. weight the competition score of
            each animal by predator_weight/ prey_weight so that heavier prey have their score weighted
-           down and are there for less likely to be eaten. But still occupy the same space in the food
+           down and are therefore less likely to be eaten. But still occupy the same location in the food
            chain when compared to larger predators.
 
            For example:
@@ -201,6 +229,7 @@ class BaseSpecies(object):
                 WEIGHT_MULTIPLIER = 20/1000 * CONSTANT 10
                 ADJUSTED_COMPETITION_SCORE = 20 percent of elephants original competitiveness
                 """
+        raise NotImplementedError
 
     def get_prey_relationships(self):
         """Undefined method designed to be overridden.
@@ -215,30 +244,38 @@ class BaseSpecies(object):
 class Lion(BaseSpecies):
     """Create a Lion."""
 
-    BaseSpecies.species = 'Lion'
-    BaseSpecies.animal_type = BaseSpecies.TYPE_CARNIVORE
-    BaseSpecies.meat_quality = BaseSpecies.QUALITY_TOUGH
+    def __init__(self, name):
+        super(self.__class__, self).__init__(name)
+        self.species = self.__class__.__name__
+        self.animal_type = BaseSpecies.TYPE_CARNIVORE
+        self.meat_quality = BaseSpecies.QUALITY_TOUGH
 
 
 class Hyena(BaseSpecies):
     """Create a Hyena."""
 
-    BaseSpecies.species = 'Hyena'
-    BaseSpecies.animal_type = BaseSpecies.TYPE_CARNIVORE
-    BaseSpecies.meat_quality = BaseSpecies.QUALITY_TOUGH
+    def __init__(self, name):
+        super(self.__class__, self).__init__(name)
+        self.species = self.__class__.__name__
+        self.animal_type = BaseSpecies.TYPE_CARNIVORE
+        self.meat_quality = BaseSpecies.QUALITY_TENDER
 
 
 class Wildebeest(BaseSpecies):
     """Create a Wildebeest."""
 
-    BaseSpecies.species = 'Wildebeest'
-    BaseSpecies.animal_type = BaseSpecies.TYPE_OMNIVORE
-    BaseSpecies.meat_quality = BaseSpecies.QUALITY_TOUGH
+    def __init__(self, name):
+        super(Wildebeest, self).__init__(name)
+        self.species = self.__class__.__name__
+        self.animal_type = BaseSpecies.TYPE_OMNIVORE
+        self.meat_quality = BaseSpecies.QUALITY_TOUGH
 
 
 class Gazelle(BaseSpecies):
     """Create a Gazelle."""
 
-    BaseSpecies.species = 'Gazelle'
-    BaseSpecies.animal_type = BaseSpecies.TYPE_HERBIVORE
-    BaseSpecies.meat_quality = BaseSpecies.QUALITY_TENDER
+    def __init__(self, name):
+        super(self.__class__, self).__init__(name)
+        self.species = self.__class__.__name__
+        self.animal_type = BaseSpecies.TYPE_HERBIVORE
+        self.meat_quality = BaseSpecies.QUALITY_TENDER

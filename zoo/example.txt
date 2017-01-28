@@ -1,18 +1,24 @@
+Basic usage:
+
 Set up of a simple zoo with two cages for testing.
 
-from python_zoo.python_zoo import Zoo, ZooCage, ZooAnimal
+from zoo.zoo import Zoo, Cage, BaseSpecies, Lion, Hyena, Wildebeest, Gazelle
+zoo = Zoo('Test Zoo')
+zoo.__repr__  # Displays the name of the zoo alongside the current number of cages and animals
+one_cage = zoo.add_cage('One Cage')  # Cages can be created directly from a Zoo object passing only their name.
+another_cage = zoo.add_cage('Another Cage')
 
-z = Zoo("Tom's Test Zoo")
-z.add_cage("The Lion Den")
-z.add_cage("The Monkey Cage")
+one_cage.__repr__  # Displays the cage name alongside the animals that are currently in it.
+one_cage.add_animal(Lion('Lilly'))  # Animals can be created directly from a cage or independently.
+one_cage.add_animal(Hyena('Henny'))  # In this case the cage_relationships method checks whether animals are eaten. In this case there are none.
+one_cage.add_animal(Wildebeest('Willy'))  # In this case Willy is instantly eaten.
+willy = zoo.get_animal('Willy')  # Zoo's have a get_animal helper method to make finding animals easy.
+willy.get_status()  # The get_status method returns a human readable status of an animal object. Willy is unfortunately 'Dead'
+willy.sit_rep  # Sit_rep records who an animal was eaten by.
 
-lions = z.cages[0]
-monkeys = z.cages[1]
+another_cage.add_animal(Wildebeest('Wally'))
+another_cage.add_animal(Gazelle('Gaz'))
 
-monkeys.add_prey("George", "Bonobo")
-monkeys.add_predator("Harambe", "Gorilla")
-lions.add_apex_predator("Growlr", "Lion")
+another_cage.add_animal(Hyena('Harry'))  # The two animals are eaten.
+zoo.__repr___  # If we call the representation of the Zoo object we will see a display of the count of all cages and all live animals.
 
-z.dinner_time("Harambe", "George")
-z.dinner_time("Growlr", "George")
-z.move_animal("The Lion Den", "The Monkey Cage", "Growlr")
