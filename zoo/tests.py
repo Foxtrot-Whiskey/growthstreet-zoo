@@ -1,4 +1,4 @@
-from zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle
+from .zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle
 import unittest
 
 
@@ -7,46 +7,64 @@ class ZooSystemTest(unittest.TestCase):
     def setUp(self):
         self.zoo = Zoo('The Zoo')
 
-    def create_different_cages(self):
-        self.cage = Cage('Test Cage')
-        self.zoo.add_cage(self.cage)
+    def test_find_out_how_many_cages(self):
+        self.assertTrue(False)
+
+    def test_find_out_which_animals_in_cage(self):
+        self.assertTrue(False)
+
+    def test_predator_eats_prey(self):
+        self.assertTrue(False)
+
+    def test_predator_does_not_eat_predator(self):
+        self.assertTrue(False)
+
+    def test_prey_does_not_eat_prey(self):
+        self.assertTrue(False)
+
+    def test_predator_does_not_eat_prey_that_it_doesnt_like(self):
+        self.assertTrue(False)
+
+    def test_create_different_cages(self):
+        cage = Cage('Test Cage')
+        self.zoo.add_cage(cage)
         self.assertTrue(self.zoo.cages)
 
-    def number_of_cages(self):
+    def test_number_of_cages(self):
         cages = self.zoo.number_of_cages()
         self.assertEqual(cages, 1)
 
-    def put_animal_in_cage(self):
+    def test_put_animal_in_cage(self):
         self.animal = Gazelle('Test')
         self.cage.add_animal(self.animal)
         self.assertTrue(self.animal in self.cage.cage_contents)
 
-    def reference_numbers(self):
+    def test_reference_numbers(self):
         self.assertEqual(self.cage.id, 0)
         self.assertEqual(self.zoo.number_of_cages(), 1)
         self.another_cage = self.zoo.create_cage('Another Test Cage')
         self.assertEqual(self.zoo.number_of_cages(), 2)
         self.assertEqual(self.another_cage.id, 1)
 
-    def animal_has_name(self):
+    def test_animal_has_name(self):
         name = self.animal.name
         self.assertTrue(name)
 
-    def animal_has_species(self):
+    def test_animal_has_species(self):
         species = self.animal.species
         self.assertTrue(species)
 
-    def animals_in_cage(self):
+    def test_animals_in_cage(self):
         contents = self.cage.cage_contents
         self.assertTrue(contents)
 
-    def predator_prey_relationships(self):
+    def test_predator_prey_relationships(self):
         self.predator = Hyena('Test')
         self.cage.add_animal(self.predator)
         prey_status = self.animal.status
         self.assertTrue(prey_status, 'DE')
 
-    def prey_prey_relationships(self):
+    def test_prey_prey_relationships(self):
         one_prey = Gazelle("One Test")
         another_prey = Gazelle("Another Test")
         prey_cage = self.zoo.add_cage(Cage("Prey Cage"))
