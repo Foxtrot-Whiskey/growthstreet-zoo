@@ -4,6 +4,7 @@
 # Collected static files
 .env
 .env*
+.coverage
 
 *.egg-info
 *.pot
