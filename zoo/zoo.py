@@ -1,4 +1,5 @@
 """You are a zoo keeper. Write a set of objects that simulates a simple zoo."""
+import itertools
 
 ANIMAL_STATUS = {
     'AL': 'Alive',
@@ -19,10 +20,11 @@ MEAT_QUALITY = {
 class Zoo(object):
     """Creates a Zoo object with a name and an empty list for cages."""
 
-    zoo_cages = 0
+    newid = itertools.count()
 
     def __init__(self, name):
         """Zoo is created with a name."""
+        self.id = next(Zoo.newid)
         self.name = name
         self.cages = []
 
@@ -35,13 +37,20 @@ class Zoo(object):
         animals = [[animal for animal in cage.cage_contents if animal.status == 'AL'] for cage in self.cages]
         return '<%s: %s Cages (%s Animals)>' % (self.name, len(self.cages), len(animals))
 
-    def add_cage(self, cage_name):
+    def number_of_cages(self):
+        """Return the number of cages in the zoo."""
+        return len(self.cages)
+
+    def add_cage(self, cage):
         """Cage objects are added to a Zoo's cages list."""
+        self.cages.append(cage)
+        return cage
+
+    def create_cage(self, cage_name):
+        """Create a cage object in a zoo from a cage name."""
         cage = Cage(cage_name)
         self.cages.append(cage)
-        self.zoo_cages += 1
         return cage
-        
 
     def remove_cage(self, cage_name):
         """The Zoo should keep track of how many cages are in existence."""
@@ -92,24 +101,19 @@ class Cage(object):
        prevented gazelles being eaten in their preferred cage as they have hiding places or whatever.
        """
 
-    instances = 0
+    newid = itertools.count()
 
     def __init__(self, cage_name, zoo=None):
         """Cage is created with a name and an empty list for contents."""
-        self.id = self.instances
+        self.id = next(Cage.newid)
         self.name = cage_name
         self.cage_contents = []
         if zoo:
             self.zoo = zoo
-        Cage.instances += 1
-
-    def __del__(self):
-        """Cage can be deleted while keeping track of the total."""
-        Cage.instances -= 1
 
     def __str__(self):
         """Human readable string returned when the class object is printed."""
-        return '<%s: %s Animals>' % (self, len(self.cage_contents))
+        return self.name
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
@@ -144,7 +148,7 @@ class Cage(object):
                 return None
 
 
-class BaseSpecies(object):
+class BaseAnimal(object):
     """Base Class for animals in the zoo.
 
     Designed to be subclassed with an unimplemented method to actually create
@@ -214,7 +218,7 @@ class BaseSpecies(object):
         quality_score = next(i for i, v in enumerate(ANIMAL_TYPES) if v == self.animal_type)
 
         self.competition_score = (type_score + 1) * (quality_score + 1)  # Should be positive in all cases
-    
+
     def get_weight_adjusted_competition_score(self):
         """Potential to add weight as a multiplier function.
 
@@ -241,41 +245,41 @@ class BaseSpecies(object):
         raise NotImplementedError
 
 
-class Lion(BaseSpecies):
+class Lion(BaseAnimal):
     """Create a Lion."""
 
     def __init__(self, name):
-        super(self.__class__, self).__init__(name)
+        super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseSpecies.TYPE_CARNIVORE
-        self.meat_quality = BaseSpecies.QUALITY_TOUGH
+        self.animal_type = BaseAnimal.TYPE_CARNIVORE
+        self.meat_quality = BaseAnimal.QUALITY_TOUGH
 
 
-class Hyena(BaseSpecies):
+class Hyena(BaseAnimal):
     """Create a Hyena."""
 
     def __init__(self, name):
-        super(self.__class__, self).__init__(name)
+        super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseSpecies.TYPE_CARNIVORE
-        self.meat_quality = BaseSpecies.QUALITY_TENDER
+        self.animal_type = BaseAnimal.TYPE_CARNIVORE
+        self.meat_quality = BaseAnimal.QUALITY_TENDER
 
 
-class Wildebeest(BaseSpecies):
+class Wildebeest(BaseAnimal):
     """Create a Wildebeest."""
 
     def __init__(self, name):
-        super(Wildebeest, self).__init__(name)
+        super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseSpecies.TYPE_OMNIVORE
-        self.meat_quality = BaseSpecies.QUALITY_TOUGH
+        self.animal_type = BaseAnimal.TYPE_OMNIVORE
+        self.meat_quality = BaseAnimal.QUALITY_TOUGH
 
 
-class Gazelle(BaseSpecies):
+class Gazelle(BaseAnimal):
     """Create a Gazelle."""
 
     def __init__(self, name):
-        super(self.__class__, self).__init__(name)
+        super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseSpecies.TYPE_HERBIVORE
-        self.meat_quality = BaseSpecies.QUALITY_TENDER
+        self.animal_type = BaseAnimal.TYPE_HERBIVORE
+        self.meat_quality = BaseAnimal.QUALITY_TENDER
