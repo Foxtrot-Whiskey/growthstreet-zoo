@@ -1,4 +1,4 @@
-from .zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle, Wildebeest, Lion
+from zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle, Wildebeest, Lion
 import unittest
 
 
