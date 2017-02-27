@@ -24,11 +24,6 @@ Testing
 -------------
 .. code:: bash
   python tests.py
-  
-
-using coverage:
-***************
-.. code:: bash
   coverage run zoo.py
   coverage run tests.py
   coverage report
