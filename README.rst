@@ -20,14 +20,13 @@ Bonus task
 2.  Each cage needs a reference number so the zoo keeper doesn't get confused.  Automatically generate a reference number when building each cage.  The first cage should be 1, the second 2, etc.
 
 
-Running tests
+Testing
 -------------
-
-To run tests:
 .. code:: bash
   python tests.py
   
-  using coverage:
+
+using coverage:
 .. code:: bash
   coverage run zoo.py
   coverage run tests.py
