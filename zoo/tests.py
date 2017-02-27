@@ -44,7 +44,7 @@ class ZooStory(unittest.TestCase):
             if self.animal.eaten:
                 self.assertTrue(hasattr(animal, 'eaten_by'))  # The program should tell you which predator ate which prey
 
-        self.assertTrue(hasattr(cage1, 'reference')) # Automatically generate a reference number when building each cage
+        self.assertTrue(hasattr(cage1, 'reference'))  # Automatically generate a reference number when building each cage
         self.assertTrue(cage1.reference, 1)
         self.assertTrue(cage2.reference, 2)
 
@@ -53,15 +53,19 @@ class ZooSystemTest(unittest.TestCase):
 
     def setUp(self):
         self.zoo = Zoo('Test Zoo')
+        self.cage = self.zoo.create_cage('Test Cage')
 
     def test_find_out_how_many_cages(self):
         test_zoo = Zoo('The Zoo')
         self.assertTrue(test_zoo.number_of_cages() == 0)
-        zoo.create_cage('Test Cage')
+        test_zoo.create_cage('Test Cage')
         self.assertTrue(test_zoo.number_of_cages() == 1)
 
     def test_find_out_which_animals_in_cage(self):
-        self.assertTrue(False)
+        self.assertTrue(self.zoo.contents == [])
+        test_animal = Hyena()
+        self.cage.add_animal(test_animal)
+        self.assertTrue(self.zoo.contents == [test_animal])
 
     def test_predator_eats_prey(self):
         self.assertTrue(False)
