@@ -22,8 +22,10 @@ Bonus task
 
 Testing
 -------------
+
 .. code:: bash
   python tests.py
+
   coverage run zoo.py
   coverage run tests.py
   coverage report
