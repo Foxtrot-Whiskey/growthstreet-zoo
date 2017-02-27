@@ -24,9 +24,11 @@ Running tests
 -------------
 
 To run tests:
-  `python tests.py`
+.. code:: bash
+  python tests.py
   
   using coverage:
-  `coverage run zoo.py`
-  `coverage run tests.py`
-  `coverage report`
+.. code:: bash
+  coverage run zoo.py
+  coverage run tests.py
+  coverage report
