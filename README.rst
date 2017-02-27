@@ -21,8 +21,8 @@ Bonus task
 
 
 Testing:
--------------
-::
+--------
+.. code-block::
   python tests.py
   coverage run zoo.py
   coverage run tests.py
