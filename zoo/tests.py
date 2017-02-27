@@ -2,7 +2,51 @@ from .zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle, Wildebeest, Lion
 import unittest
 
 
+class ZooStory(unittest.TestCase):
+    """Single systems test to test against the requirements in the README.rst file."""
 
+    def test_requirements(self):
+        zoo = Zoo()
+        cage1 = Cage()
+        cage2 = Cage()
+
+        self.assertEqual(zoo.number_of_cages(), 2)  # At any time, you should be able to find out how many cages are in the zoo.
+
+        lion = Lion()
+        hyena = Hyena()
+        gazelle = Gazelle()
+        wildebeest = Wildebeest()
+
+        cage1.add_animal(lion)
+        cage2.add_animal(gazelle)
+
+        self.assertTrue(cage1.contents == [lion])  # Put different animals in the cages
+        self.assertTrue(hasattr(lion, 'species'))  # Each animal should be of a particular species
+        self.assertTrue(lion.species)  # Each animal should be of a particular species
+        self.assertTrue(hasattr(lion, 'name'))  # Each animal should have a name given to them by the zookeeper
+        self.assertTrue(lion.name)  # Each animal should have a name given to them by the zookeeper
+
+        cage1.add_animal(hyena)
+        cage2.add_animal(wildebeest)
+
+        self.assertTrue(cage1.contents == [lion, hyena])  # Find out which animals are in a particular cage
+        self.assertTrue(cage2.contents == [gazelle, wildebeest])  # Find out which animals are in a particular cage
+
+        predator = Lion()
+
+        cage2.add_animal(predator)
+        self.assertTrue(predator.status == 'AL')  # If you put prey and predator in the same cage, then all the prey should be eaten by the predator
+        self.assertTrue(gazelle.status == 'DE')
+        self.assertTrue(wildebeest.status == 'DE')
+
+        for animal in cage2.contents:
+            self.assertTrue(hasattr(animal, 'eaten'))
+            if self.animal.eaten:
+                self.assertTrue(hasattr(animal, 'eaten_by'))  # The program should tell you which predator ate which prey
+
+        self.assertTrue(hasattr(cage1, 'reference'))  # Automatically generate a reference number when building each cage
+        self.assertTrue(cage1.reference, 1)
+        self.assertTrue(cage2.reference, 2)
 
 
 class ZooSystemTest(unittest.TestCase):
