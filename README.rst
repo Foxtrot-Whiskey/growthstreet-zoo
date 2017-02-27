@@ -23,7 +23,7 @@ Bonus task
 Testing:
 --------
 
-.. code-block:: bash
+
     python tests.py
 
 
