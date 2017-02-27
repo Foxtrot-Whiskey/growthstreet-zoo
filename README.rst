@@ -27,6 +27,7 @@ Testing
   
 
 using coverage:
+***************
 .. code:: bash
   coverage run zoo.py
   coverage run tests.py
