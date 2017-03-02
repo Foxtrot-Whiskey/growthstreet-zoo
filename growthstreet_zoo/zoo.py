@@ -123,30 +123,11 @@ class Cage(object):
         animal.get_competition_score()
         animal.cage = self
         self.cage_contents.append(animal)
-        relationship = self.cage_relationships()
-        if relationship:
-            return relationship
-        else:
-            return self
+        self.predators_eat_prey()
 
-    def cage_relationships(self):
-        """If you put prey and predator in the same cage, then all the prey should be eaten by the predator."""
-        if len(self.cage_contents) > 1:
-            COMPETITIVENESS = 2  # The higher the competitiveness the harder it is to eat animals. Animals try harder to avoid being eaten.
-            competition_scores = [animal.competition_score for animal in self.cage_contents]
-            predators = [animal for animal in self.cage_contents if animal.competition_score == min(competition_scores)]
-            eaten_animals = 0
-
-            for animal in self.cage_contents:
-                if animal.competition_score > min(competition_scores) * COMPETITIVENESS:  # There must be a difference in competitiveness of a certain amount calculated with a CONSTANT
-                    animal.status = animal.STATUS_DEAD
-                    animal.sit_rep = "I was eaten by {}".format(predators)
-                    eaten_animals += 1
-            if eaten_animals:
-                return "{} animals eaten".format(eaten_animals)
-            else:
-                return None
-
+    def predators_eat_prey(self):
+        response = '{} ate {}'.format(one_animal, another_animal)
+        return(response)
 
 class BaseAnimal(object):
     """Base Class for animals in the zoo.
