@@ -23,7 +23,11 @@ Bonus task
 Testing:
 --------
 
+
     python tests.py
+
+
+
     coverage run zoo.py
     coverage run tests.py
     coverage report
