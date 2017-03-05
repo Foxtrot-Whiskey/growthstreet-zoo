@@ -21,15 +21,15 @@ class ZooStory(TestCase):
         cage1.add_animal(lion)
         cage2.add_animal(gazelle)
 
-        self.assertTrue(cage1.contents == [lion])  # Put different animals in the cages
+        self.assertEqual(cage1.contents, [lion])  # Put different animals in the cages
         self.assertTrue(lion.species)  # Each animal should be of a particular species
         self.assertTrue(lion.name)  # Each animal should have a name given to them by the zookeeper
 
         cage1.add_animal(hyena)
         cage2.add_animal(wildebeest)
 
-        self.assertTrue(cage1.contents == [lion, hyena])  # Find out which animals are in a particular cage
-        self.assertTrue(cage2.contents == [gazelle, wildebeest])  # Find out which animals are in a particular cage
+        self.assertEqual(cage1.contents, [lion, hyena])  # Find out which animals are in a particular cage
+        self.assertEqual(cage2.contents, [gazelle, wildebeest])  # Find out which animals are in a particular cage
 
         with patch("builtins.print") as mock_print:
             prey_cage = Cage()
