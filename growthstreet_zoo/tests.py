@@ -1,5 +1,6 @@
 from zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle, Wildebeest, Lion
-from unittest import TestCase, mock, patch
+
+
 
 
 class ZooStory(TestCase):
@@ -20,29 +21,26 @@ class ZooStory(TestCase):
         cage1.add_animal(lion)
         cage2.add_animal(gazelle)
 
-        self.assertTrue(cage1.contents == [lion])  # Put different animals in the cages
+        self.assertEqual(cage1.contents, [lion])  # Put different animals in the cages
         self.assertTrue(lion.species)  # Each animal should be of a particular species
         self.assertTrue(lion.name)  # Each animal should have a name given to them by the zookeeper
 
         cage1.add_animal(hyena)
         cage2.add_animal(wildebeest)
 
-        self.assertTrue(cage1.contents == [lion, hyena])  # Find out which animals are in a particular cage
-        self.assertTrue(cage2.contents == [gazelle, wildebeest])  # Find out which animals are in a particular cage
+        self.assertEqual(cage1.contents, [lion, hyena])  # Find out which animals are in a particular cage
+        self.assertEqual(cage2.contents, [gazelle, wildebeest])  # Find out which animals are in a particular cage
 
-    @patch('zoo.Cage.predators_eat_prey')
-    def test_predator_eats_prey(self, mock_predators_eat_prey):
-        cage = Cage()
+        with patch("builtins.print") as mock_print:
+            prey_cage = Cage()
 
-        predator = Lion(name='Predator')
-        prey = Gazelle(name='Prey')
+            predator = Lion(name='Predator')
+            prey = Gazelle(name='Prey')
 
-        mock_predators_eat_prey.return_value = "Predator ate Prey"
+            prey_cage.add_animal(prey)
+            prey_cage.add_animal(predator)
 
-        cage.add_animal(prey)
-        cage.add_animal(predator)
-        predators_eat_prey = cage.predators_eat_prey()
-        assert predators_eat_prey == "Predator ate Prey"
+            mock_print.assert_called_once_with("Predator ate Prey")
 
 
 class ZooSystemTest(TestCase):
