@@ -75,14 +75,15 @@ class Cage(object):
             animal_1 = animal_pair[0]
             animal_2 = animal_pair[1]
 
-            if animal_1.is_eaten(animal_2):
-                print("{} ate {}.".format(animal_1.name, animal_2.name))
-                animal_1.status = animal_1.STATUS_DEAD
-            elif animal_2.is_eaten(animal_1):
-                print("{} ate {}.".format(animal_2.name, animal_1.name))
-                animal_2.status = animal_2.STATUS_DEAD
-            else:
-                pass
+            if animal_1.status == animal_1.STATUS_ALIVE and animal_2.status == animal_2.STATUS_ALIVE:
+                if animal_1.is_eaten(animal_2):
+                    print("{} ate {}.".format(animal_1.name, animal_2.name))
+                    animal_1.status = animal_1.STATUS_DEAD
+                elif animal_2.is_eaten(animal_1):
+                    print("{} ate {}.".format(animal_2.name, animal_1.name))
+                    animal_2.status = animal_2.STATUS_DEAD
+                else:
+                    pass
 
 
 class BaseAnimal(object):

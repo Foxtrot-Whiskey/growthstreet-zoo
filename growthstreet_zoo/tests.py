@@ -1,5 +1,5 @@
 from zoo import Zoo, Cage, BaseAnimal, Hyena, Gazelle, Wildebeest, Lion
-from unittest import TestCase
+from unittest import TestCase, main
 from unittest.mock import patch
 
 
@@ -43,7 +43,7 @@ class ZooStory(TestCase):
             prey_cage.add_animal(prey)
             prey_cage.add_animal(predator)
 
-            mock_print.assert_called_once_with("Predator ate Prey")
+            mock_print.assert_called_once_with("Predator ate Prey.")
 
 
 class ZooUnitTests(TestCase):
@@ -76,4 +76,4 @@ class AnimalUnitTests(TestCase):
         self.assertEqual(str(self.animal), 'Test')
 
 if __name__ == '__main__':
-    unittest.main()
+    main()
