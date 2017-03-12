@@ -27,9 +27,8 @@ class Zoo(object):
         """Return the number of cages in the zoo."""
         return len(self.cages)
 
-    def add_cage(self, name=None):
+    def add_cage(self, cage):
         """Cage objects are added to a Zoo's cages list."""
-        cage = Cage(name)
         self.cages.append(cage)
         return cage
 
@@ -93,20 +92,7 @@ class BaseAnimal(object):
     the animal.
     """
 
-    STATUS_ALIVE = 'AL'
-    STATUS_DEAD = 'DE'
-
-    TYPE_HERBIVORE = 'HE'
-    TYPE_OMNIVORE = 'OM'
-    TYPE_CARNIVORE = 'CA'
-
-    QUALITY_TOUGH = 'TO'
-    QUALITY_TENDER = 'TE'
-
-    COMPETITION_MAP = {'Lion': 1,
-                       'Hyena': 2,
-                       'Wildebeest': 3,
-                       'Gazelle': 4}
+    COMPETITION_MAP = {}
 
     def __init__(self, name=None, cage=None):
         """Zoo animals have names, species, cages and are created 'Alive'."""
@@ -133,9 +119,8 @@ class BaseAnimal(object):
 
     def is_eaten(self, animal):
         """Return a Boolean indicating whether an instance of an animal is eaten."""
-        self.competition = self.COMPETITION_MAP[self.species]
-        animal_competition = self.COMPETITION_MAP[animal.species]
-        if self.competition < animal_competition:
+        self.prey = self.COMPETITION_MAP[self.species]
+        if animal.species in self.prey:
             return True
         else:
             return False
@@ -144,38 +129,37 @@ class BaseAnimal(object):
 class Lion(BaseAnimal):
     """Create a Lion."""
 
+    COMPETITION_MAP.update({'Lion': ['Hyena', 'Wildebeest', 'Gazelle']})
+
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseAnimal.TYPE_CARNIVORE
-        self.meat_quality = BaseAnimal.QUALITY_TOUGH
-
 
 class Hyena(BaseAnimal):
     """Create a Hyena."""
 
+    COMPETITION_MAP.update({'Hyena': ['Wildebeest', 'Gazelle']})
+
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseAnimal.TYPE_CARNIVORE
-        self.meat_quality = BaseAnimal.QUALITY_TENDER
 
 
 class Wildebeest(BaseAnimal):
     """Create a Wildebeest."""
 
+    COMPETITION_MAP.update({'Wildebeest': ['Gazelle']})
+
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseAnimal.TYPE_OMNIVORE
-        self.meat_quality = BaseAnimal.QUALITY_TOUGH
 
 
 class Gazelle(BaseAnimal):
     """Create a Gazelle."""
 
+    COMPETITION_MAP.update({'Gazelle': []})
+
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.animal_type = BaseAnimal.TYPE_HERBIVORE
-        self.meat_quality = BaseAnimal.QUALITY_TENDER
