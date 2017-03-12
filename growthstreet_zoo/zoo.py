@@ -92,6 +92,9 @@ class BaseAnimal(object):
     the animal.
     """
 
+    STATUS_ALIVE = 'AL'
+    STATUS_DEAD = 'DE'
+
     COMPETITION_MAP = {}
 
     def __init__(self, name=None, cage=None):
@@ -129,37 +132,33 @@ class BaseAnimal(object):
 class Lion(BaseAnimal):
     """Create a Lion."""
 
-    COMPETITION_MAP.update({'Lion': ['Hyena', 'Wildebeest', 'Gazelle']})
-
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
+        self.COMPETITION_MAP.update({'Lion': ['Hyena', 'Wildebeest', 'Gazelle']})
 
 class Hyena(BaseAnimal):
     """Create a Hyena."""
 
-    COMPETITION_MAP.update({'Hyena': ['Wildebeest', 'Gazelle']})
-
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
+        self.COMPETITION_MAP.update({'Hyena': ['Wildebeest', 'Gazelle']})
 
 
 class Wildebeest(BaseAnimal):
     """Create a Wildebeest."""
 
-    COMPETITION_MAP.update({'Wildebeest': ['Gazelle']})
-
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
+        self.COMPETITION_MAP.update({'Wildebeest': ['Gazelle']})
 
 
 class Gazelle(BaseAnimal):
     """Create a Gazelle."""
 
-    COMPETITION_MAP.update({'Gazelle': []})
-
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
+        self.COMPETITION_MAP.update({'Gazelle': []})
