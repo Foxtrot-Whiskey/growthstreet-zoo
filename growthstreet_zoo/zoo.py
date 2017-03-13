@@ -98,7 +98,7 @@ class BaseAnimal(GenerateNameMixin):
         return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
 
     def is_eaten(self, animal):
-        """Return a Boolean indicating whether an instance of an animal is eaten."""
+        """Print a string indicating whether an instance of an animal is eaten by."""
         self.prey = self.COMPETITION_MAP[self.species]
         if animal.species in self.prey:
             animal.status = animal.STATUS_DEAD
@@ -112,6 +112,7 @@ class Lion(BaseAnimal):
         super().__init__(name)
         self.species = self.__class__.__name__
         self.COMPETITION_MAP.update({'Lion': ['Hyena', 'Wildebeest', 'Gazelle']})
+
 
 class Hyena(BaseAnimal):
     """Create a Hyena."""
