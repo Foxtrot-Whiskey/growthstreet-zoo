@@ -70,10 +70,7 @@ class Cage(object):
         """Given animals in a cage. Check to see if any of them should be eaten."""
         alive = [animal for animal in self.contents if animal.status == animal.STATUS_ALIVE]
         permutations = itertools.permutations(alive, 2)
-        for animal_pair in permutations:
-            animal_1 = animal_pair[0]
-            animal_2 = animal_pair[1]
-
+        for animal_1, animal_2 in permutations:
             if animal_1.status == animal_1.STATUS_ALIVE and animal_2.status == animal_2.STATUS_ALIVE:
                 animal_1.is_eaten(animal_2)
                 animal_2.is_eaten(animal_1)
