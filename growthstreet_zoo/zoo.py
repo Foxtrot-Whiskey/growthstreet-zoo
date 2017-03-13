@@ -1,18 +1,15 @@
 """You are a zoo keeper. Write a set of objects that simulates a simple zoo."""
 import itertools
-from name_generator import generate_name
+from name_generator import GenerateNameMixin
 
 
-class Zoo(object):
+class Zoo(GenerateNameMixin):
     """Creates a Zoo object with a name and an empty list for cages."""
 
     def __init__(self, name=None):
         """Zoo is created with a name."""
         self.cages = []
-        if not name:
-            self.name = generate_name()
-        else:
-            self.name = name
+        self.name = self.generate_name(name)
 
     def __str__(self):
         """Human readable string returned when the class object is printed."""
@@ -33,7 +30,7 @@ class Zoo(object):
         return cage
 
 
-class Cage(object):
+class Cage(GenerateNameMixin):
     """Creates a ZooCage object with a cage_name.
 
        Possibility to extend a BaseCage class that would have a 'prefferred' contents. e.g a gazelle cage that
@@ -46,10 +43,7 @@ class Cage(object):
         """Cage is created with a name and an empty list for contents."""
         self.id = next(Cage.newid)
         self.contents = []
-        if not cage_name:
-            self.name = generate_name()
-        else:
-            self.name = cage_name
+        self.name = self.generate_name(cage_name)
         if zoo:
             self.zoo = zoo
 
@@ -67,7 +61,7 @@ class Cage(object):
         self.predators_eat_prey()
 
     def predators_eat_prey(self):
-        """Given animals in a cage. Check to see if any of them should be eaten."""
+        """When a  new animal enters a cage, check whether any animals in the cage should be eaten and eat them."""
         alive = [animal for animal in self.contents if animal.status == animal.STATUS_ALIVE]
         permutations = itertools.permutations(alive, 2)
         for animal_1, animal_2 in permutations:
@@ -76,7 +70,7 @@ class Cage(object):
                 animal_2.is_eaten(animal_1)
 
 
-class BaseAnimal(object):
+class BaseAnimal(GenerateNameMixin):
     """Base Class for animals in the zoo.
 
     Designed to be subclassed with an unimplemented method to actually create
@@ -91,15 +85,7 @@ class BaseAnimal(object):
     def __init__(self, name=None, cage=None):
         """Zoo animals have names, species, cages and are created 'Alive'."""
         self.status = self.STATUS_ALIVE
-        self.species = None
-        self.animal_type = None
-        self.sit_rep = None
-        self.competition_score = None
-        self.meat_quality = None
-        if not name:
-            self.name = generate_name()
-        else:
-            self.name = name
+        self.name = self.generate_name(name)
         if cage:
             self.cage = cage
 
@@ -117,9 +103,6 @@ class BaseAnimal(object):
         if animal.species in self.prey:
             animal.status = animal.STATUS_DEAD
             print("{} ate {}.".format(self.name, animal.name))
-            return True
-        else:
-            return False
 
 
 class Lion(BaseAnimal):

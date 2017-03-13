@@ -16,9 +16,17 @@ nouns = ["waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning
          "violet", "water", "wildflower", "wave", "water", "resonance", "sun", "wood", "dream", "cherry", "tree",
          "fog", "frost", "voice", "paper", "frog", "smoke", "star"]
 
-def generate_name(separator='-'):
-    adj = random.choice(adjs)
-    noun = random.choice(nouns)
-    return '{adj}{separator}{noun}'.format(adj=adj,
-                                           noun=noun,
-                                           separator=separator)
+
+class GenerateNameMixin:
+    """Mixin to include generate_name function in a class."""
+
+    def generate_name(self, name, separator='-'):
+        """Generate a random name from a list of adjectives and nouns. e.g. Dissapointing-waterfall."""
+        if not name:
+            adj = random.choice(adjs)
+            noun = random.choice(nouns)
+            return '{adj}{separator}{noun}'.format(adj=adj,
+                                                   noun=noun,
+                                                   separator=separator)
+        else:
+            return name
