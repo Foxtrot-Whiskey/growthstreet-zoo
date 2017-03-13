@@ -75,14 +75,8 @@ class Cage(object):
             animal_2 = animal_pair[1]
 
             if animal_1.status == animal_1.STATUS_ALIVE and animal_2.status == animal_2.STATUS_ALIVE:
-                if animal_1.is_eaten(animal_2):
-                    print("{} ate {}.".format(animal_1.name, animal_2.name))
-                    animal_1.status = animal_1.STATUS_DEAD
-                elif animal_2.is_eaten(animal_1):
-                    print("{} ate {}.".format(animal_2.name, animal_1.name))
-                    animal_2.status = animal_2.STATUS_DEAD
-                else:
-                    pass
+                animal_1.is_eaten(animal_2)
+                animal_2.is_eaten(animal_1)
 
 
 class BaseAnimal(object):
@@ -124,6 +118,8 @@ class BaseAnimal(object):
         """Return a Boolean indicating whether an instance of an animal is eaten."""
         self.prey = self.COMPETITION_MAP[self.species]
         if animal.species in self.prey:
+            animal.status = animal.STATUS_DEAD
+            print("{} ate {}.".format(self.name, animal.name))
             return True
         else:
             return False
