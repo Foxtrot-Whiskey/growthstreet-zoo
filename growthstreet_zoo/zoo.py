@@ -58,16 +58,13 @@ class Cage(GenerateNameMixin):
     def add_animal(self, animal):
         """Add an instance of an animal to a Cage."""
         self.contents.append(animal)
-        self.predators_eat_prey()
+        self.eat_all_prey(animal)
 
-    def predators_eat_prey(self):
+    def eat_all_prey(self, new_animal):
         """When a  new animal enters a cage, check whether any animals in the cage should be eaten and eat them."""
-        alive = [animal for animal in self.contents if animal.status == animal.STATUS_ALIVE]
-        permutations = itertools.permutations(alive, 2)
-        for animal_1, animal_2 in permutations:
-            if animal_1.status == animal_1.STATUS_ALIVE and animal_2.status == animal_2.STATUS_ALIVE:
-                animal_1.is_eaten(animal_2)
-                animal_2.is_eaten(animal_1)
+        live_animals = [animal for animal in self.contents if animal.status == animal.STATUS_ALIVE]
+        for animal in live_animals:
+            new_animal.is_eaten_by(animal)
 
 
 class BaseAnimal(GenerateNameMixin):
@@ -97,8 +94,8 @@ class BaseAnimal(GenerateNameMixin):
         """Class representation, returned when class object is called."""
         return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
 
-    def is_eaten(self, animal):
-        """Print a string indicating whether an instance of an animal is eaten by."""
+    def is_eaten_by(self, animal):
+        """Print a string indicating what an instance of an animal is eaten by."""
         self.prey = self.COMPETITION_MAP[self.species]
         if animal.species in self.prey:
             animal.status = animal.STATUS_DEAD
