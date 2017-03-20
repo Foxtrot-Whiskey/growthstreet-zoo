@@ -19,6 +19,9 @@ nouns = ["waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning
 
 class GenerateNameMixin:
     """Mixin to include generate_name function in a class."""
+    
+    def __init__(self, name=None):
+        self.name = self.generate_name(name)
 
     def generate_name(self, name, separator='-'):
         """Generate a random name from a list of adjectives and nouns. e.g. Dissapointing-waterfall."""

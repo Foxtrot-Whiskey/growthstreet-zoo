@@ -8,8 +8,8 @@ class Zoo(GenerateNameMixin):
 
     def __init__(self, name=None):
         """Zoo is created with a name."""
+        super().__init__(name)
         self.cages = []
-        self.name = self.generate_name(name)
 
     def __str__(self):
         """Human readable string returned when the class object is printed."""
@@ -39,11 +39,11 @@ class Cage(GenerateNameMixin):
 
     newid = itertools.count()
 
-    def __init__(self, cage_name=None, zoo=None):
+    def __init__(self, name=None, zoo=None):
         """Cage is created with a name and an empty list for contents."""
+        super().__init__(name)
         self.id = next(Cage.newid)
         self.contents = []
-        self.name = self.generate_name(cage_name)
         if zoo:
             self.zoo = zoo
 
@@ -81,8 +81,8 @@ class BaseAnimal(GenerateNameMixin):
 
     def __init__(self, name=None, cage=None):
         """Zoo animals have names, species, cages and are created 'Alive'."""
+        super().__init__(name)
         self.status = self.STATUS_ALIVE
-        self.name = self.generate_name(name)
         if cage:
             self.cage = cage
 
