@@ -25,7 +25,7 @@ class ZooStory(TestCase):
         cage2.add_animal(gazelle)
 
         self.assertEqual(cage1.contents, [lion])  # Put different animals in the cages
-        self.assertTrue(lion.species)  # Each animal should be of a particular species
+        self.assertTrue(lion.SPECIES)  # Each animal should be of a particular species
         self.assertTrue(lion.name)  # Each animal should have a name given to them by the zookeeper
 
         cage1.add_animal(hyena)

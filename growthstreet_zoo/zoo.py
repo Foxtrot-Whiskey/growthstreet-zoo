@@ -33,7 +33,7 @@ class Cage(GenerateNameMixin):
        prevented gazelles being eaten in their preferred cage as they have hiding places or whatever.
        """
 
-    newid = itertools.count()
+    newid = itertools.count()  # A class wide attribute to generate consecutive numbers from an iterator. Using this generator is thread-safe and helps avoid race conditions.
 
     def __init__(self, name=None, zoo=None):
         """Cage is created with a name and an empty list for contents."""
@@ -68,6 +68,7 @@ class BaseAnimal(GenerateNameMixin):
     """
 
     COMPETITION_MAP = {}
+    SPECIES = None
 
     def __init__(self, name=None, cage=None):
         """Zoo animals have names, species, cages and are created 'Alive'."""
@@ -76,12 +77,12 @@ class BaseAnimal(GenerateNameMixin):
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        return '<%s: %s>' % (self.__class__.__name__, self)
+        return '<%s: %s>' % (self.SPECIES, self)
 
     def get_prey(self):
         """Recursively get prey from a hash table."""
         self.prey = []
-        animal = self.species
+        animal = self.SPECIES
         while animal:
             try:
                 prey = self.COMPETITION_MAP[animal]
@@ -93,48 +94,54 @@ class BaseAnimal(GenerateNameMixin):
     def eaten_by_animal(self, animal):
         """Print a string indicating what an instance of an animal is eaten by."""
         self.get_prey()
-        if animal.species in self.prey:
+        if animal.SPECIES in self.prey:
             animal.is_alive = False
             print("{} ate {}.".format(self.name, animal.name))
 
 
 class Lion(BaseAnimal):
-    """A BaseAnimal instance with properties of a Lion."""
+    """A Lion that can be put in a cage and/or a zoo."""
+    
+    SPECIES = 'Lion'
 
     def __init__(self, name=None):
-        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
+        """Instantiate object with all properties of the BaseAnimal class and a name."""
         super().__init__(name)
-        self.species = self.__class__.__name__
         self.COMPETITION_MAP.update({'Lion': 'Hyena',
                                      'Hyena': 'Wildebeest',
                                      'Wildebeest': 'Gazelle'})
 
 
 class Hyena(BaseAnimal):
-    """A BaseAnimal instance with properties of a Hyena."""
+    """A Hyena that can be put in a cage and/or a zoo."""
+    
+    SPECIES = 'Hyena'
 
     def __init__(self, name=None):
-        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
+        """Instantiate object with all properties of the BaseAnimal class and a name."""
         super().__init__(name)
-        self.species = self.__class__.__name__
         self.COMPETITION_MAP.update({'Hyena': 'Wildebeest',
                                      'Wildebeest': 'Gazelle'})
 
 
 class Wildebeest(BaseAnimal):
-    """A BaseAnimal instance with properties of a Wildebeest."""
+    """A Wildebeest that can be put in a cage and/or a zoo."""
+
+    SPECIES = 'Wildebeest'
 
     def __init__(self, name=None):
+        """Instantiate object with all properties of the BaseAnimal class and a name."""
         super().__init__(name)
-        self.species = self.__class__.__name__
         self.COMPETITION_MAP.update({'Wildebeest': 'Gazelle'})
 
 
 class Gazelle(BaseAnimal):
-    """A BaseAnimal instance with properties of a Wildebeest."""
+    """A Gazelle that can be put in a cage and/or a zoo."""
+
+    SPECIES = 'Gazelle'
 
     def __init__(self, name=None):
-        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
+        """Instantiate object with all properties of the BaseAnimal class and a name."""
         super().__init__(name)
         self.species = self.__class__.__name__
         self.COMPETITION_MAP.update({'Gazelle': ''})
