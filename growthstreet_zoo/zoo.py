@@ -11,13 +11,9 @@ class Zoo(GenerateNameMixin):
         super().__init__(name)
         self.cages = []
 
-    def __str__(self):
-        """Human readable string returned when the class object is printed."""
-        return self.name
-
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        animals = [[animal for animal in cage.cage_contents if animal.status == 'AL'] for cage in self.cages]
+        animals = [[animal for animal in cage.cage_contents if animal.is_alive] for cage in self.cages]
         return '<%s: %s Cages (%s Animals)>' % (self.name, len(self.cages), len(animals))
 
     def number_of_cages(self):
@@ -47,10 +43,6 @@ class Cage(GenerateNameMixin):
         if zoo:
             self.zoo = zoo
 
-    def __str__(self):
-        """Human readable string returned when the class object is printed."""
-        return self.name
-
     def __repr__(self):
         """Class representation, returned when class object is called."""
         return '<%s: %s (%s)>' % (self.__class__.__name__, self.name, self.contents)
@@ -62,9 +54,10 @@ class Cage(GenerateNameMixin):
 
     def eat_all_prey(self, new_animal):
         """When a  new animal enters a cage, check whether any animals in the cage should be eaten and eat them."""
-        live_animals = [animal for animal in self.contents if animal.status == animal.STATUS_ALIVE]
+        live_animals = [animal for animal in self.contents if animal.is_alive]
         for animal in live_animals:
-            new_animal.is_eaten_by(animal)
+            animal.eaten_by_animal(new_animal)
+            new_animal.eaten_by_animal(animal)
 
 
 class BaseAnimal(GenerateNameMixin):
@@ -74,65 +67,74 @@ class BaseAnimal(GenerateNameMixin):
     the animal.
     """
 
-    STATUS_ALIVE = 'AL'
-    STATUS_DEAD = 'DE'
-
     COMPETITION_MAP = {}
 
     def __init__(self, name=None, cage=None):
         """Zoo animals have names, species, cages and are created 'Alive'."""
         super().__init__(name)
-        self.status = self.STATUS_ALIVE
-        if cage:
-            self.cage = cage
-
-    def __str__(self):
-        """Human readable string returned when the class object is printed."""
-        return self.name
+        self.is_alive = True
 
     def __repr__(self):
         """Class representation, returned when class object is called."""
-        return '<%s: %s (%s)>' % (self.__class__.__name__, self, self.species)
+        return '<%s: %s>' % (self.__class__.__name__, self)
 
-    def is_eaten_by(self, animal):
+    def get_prey(self):
+        """Recursively get prey from a hash table."""
+        self.prey = []
+        animal = self.species
+        while animal:
+            try:
+                prey = self.COMPETITION_MAP[animal]
+                self.prey.append(prey)
+                animal = prey
+            except KeyError:
+                break
+
+    def eaten_by_animal(self, animal):
         """Print a string indicating what an instance of an animal is eaten by."""
-        self.prey = self.COMPETITION_MAP[self.species]
+        self.get_prey()
         if animal.species in self.prey:
-            animal.status = animal.STATUS_DEAD
+            animal.is_alive = False
             print("{} ate {}.".format(self.name, animal.name))
 
 
 class Lion(BaseAnimal):
-    """Create a Lion."""
+    """A BaseAnimal instance with properties of a Lion."""
 
     def __init__(self, name=None):
+        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.COMPETITION_MAP.update({'Lion': ['Hyena', 'Wildebeest', 'Gazelle']})
+        self.COMPETITION_MAP.update({'Lion': 'Hyena',
+                                     'Hyena': 'Wildebeest',
+                                     'Wildebeest': 'Gazelle'})
 
 
 class Hyena(BaseAnimal):
-    """Create a Hyena."""
+    """A BaseAnimal instance with properties of a Hyena."""
 
     def __init__(self, name=None):
+        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.COMPETITION_MAP.update({'Hyena': ['Wildebeest', 'Gazelle']})
+        self.COMPETITION_MAP.update({'Hyena': 'Wildebeest',
+                                     'Wildebeest': 'Gazelle'})
 
 
 class Wildebeest(BaseAnimal):
-    """Create a Wildebeest."""
+    """A BaseAnimal instance with properties of a Wildebeest."""
 
     def __init__(self, name=None):
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.COMPETITION_MAP.update({'Wildebeest': ['Gazelle']})
+        self.COMPETITION_MAP.update({'Wildebeest': 'Gazelle'})
 
 
 class Gazelle(BaseAnimal):
-    """Create a Gazelle."""
+    """A BaseAnimal instance with properties of a Wildebeest."""
 
     def __init__(self, name=None):
+        """Instantiate object with all properties of the BaseAnimal class and the correct species."""
         super().__init__(name)
         self.species = self.__class__.__name__
-        self.COMPETITION_MAP.update({'Gazelle': []})
+        self.COMPETITION_MAP.update({'Gazelle': ''})

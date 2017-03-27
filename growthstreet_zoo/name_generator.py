@@ -23,6 +23,10 @@ class GenerateNameMixin:
     def __init__(self, name=None):
         self.name = self.generate_name(name)
 
+    def __str__(self):
+        """Human readable string returned when the class object is printed."""
+        return self.name
+
     def generate_name(self, name, separator='-'):
         """Generate a random name from a list of adjectives and nouns. e.g. Dissapointing-waterfall."""
         if not name:

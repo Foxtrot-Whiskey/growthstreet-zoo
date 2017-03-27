@@ -45,6 +45,17 @@ class ZooStory(TestCase):
 
             mock_print.assert_called_once_with("Predator ate Prey.")
 
+        with patch("builtins.print") as mock_print:
+            predator_cage = Cage()
+
+            predator = Lion(name='Predator')
+            prey = Gazelle(name='Prey')
+
+            predator_cage.add_animal(predator)
+            predator_cage.add_animal(prey)
+
+            mock_print.assert_called_once_with("Predator ate Prey.")
+
 
 class ZooUnitTests(TestCase):
 
